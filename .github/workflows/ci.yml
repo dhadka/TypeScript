@@ -27,7 +27,7 @@ jobs:
     - name: Cache .git folder
       uses: actions/cache@v1
       with:
-        path: ~/.git
+        path: ~/work/TypeScript/TypeScript/.git/
         key: git-${{ steps.get-date.outputs.date }}
         restore-keys: git-
     - uses: actions/checkout@v1
