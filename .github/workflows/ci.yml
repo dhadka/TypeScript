@@ -24,22 +24,22 @@ jobs:
       run: |
         echo "::set-output name=date::$(/bin/date -u "+%Y%m%d")"
       shell: bash # For Windows, Linux and macOS default to bash already
-    # This version of the cache stores one entry per day and relies on checkout to pull the necessary changes.
-    #- name: Cache .git folder
-    #  uses: actions/cache@v1
-    #  with:
-    #    path: .git/
-    #    key: git-${{ steps.get-date.outputs.date }}
-    #    restore-keys: |
-    #      git-
-    # This version of the cache has more "churn" as it caches each commit.
+    # It takes about 2 min to checkout the entire repo. This caches .git once a day and uses checkout to just fetch the changes.
     - name: Cache .git folder
       uses: actions/cache@v1
       with:
         path: .git/
-        key: git-${{ github.sha }}
+        key: git-${{ steps.get-date.outputs.date }}
         restore-keys: |
           git-
+    # This version of the cache has more "churn" as it caches each commit.
+    #- name: Cache .git folder
+    #  uses: actions/cache@v1
+    #  with:
+    #    path: .git/
+    #    key: git-${{ github.sha }}
+    #    restore-keys: |
+    #      git-
     - uses: actions/checkout@v1
       with:
         fetch-depth: 5
