@@ -19,18 +19,26 @@ jobs:
         node-version: [8.x, 10.x, 12.x]
 
     steps:
-    - name: Get Date
+    - name: Get date
       id: get-date
       run: |
         echo "::set-output name=date::$(/bin/date -u "+%Y%m%d")"
       shell: bash # For Windows, Linux and macOS default to bash already
+    # This version of the cache stores one entry per day and relies on checkout to pull the necessary changes.
+    #- name: Cache .git folder
+    #  uses: actions/cache@v1
+    #  with:
+    #    path: .git/
+    #    key: git-${{ steps.get-date.outputs.date }}
+    #    restore-keys: |
+    #      git-
+    # This version of the cache has more "churn" as it caches each commit.
     - name: Cache .git folder
       uses: actions/cache@v1
       with:
         path: .git/
-        key: git-${{ steps.get-date.outputs.date }}-${{ github.ref }}
+        key: git-${{ github.sha }}
         restore-keys: |
-          git-${{ steps.get-date.outputs.date }}-
           git-
     - uses: actions/checkout@v1
       with:
