@@ -27,8 +27,8 @@ jobs:
     - name: Cache .git folder
       uses: actions/cache@v1
       with:
-        path: $GITHUB_WORKSPACE/.git/
-        key: git-${{ steps.get-date.outputs.date }}-$GITHUB_REF
+        path: .git/
+        key: git-${{ steps.get-date.outputs.date }}-${{ github.ref }}
         restore-keys: |
           git-${{ steps.get-date.outputs.date }}-
           git-
