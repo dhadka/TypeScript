@@ -27,9 +27,11 @@ jobs:
     - name: Cache .git folder
       uses: actions/cache@v1
       with:
-        path: ~/work/TypeScript/TypeScript/.git/
-        key: git-${{ steps.get-date.outputs.date }}
-        restore-keys: git-
+        path: $GITHUB_WORKSPACE/.git/
+        key: git-${{ steps.get-date.outputs.date }}-$GITHUB_REF
+        restore-keys: |
+          git-${{ steps.get-date.outputs.date }}-
+          git-
     - uses: actions/checkout@v1
       with:
         fetch-depth: 5
