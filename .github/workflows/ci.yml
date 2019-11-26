@@ -19,6 +19,17 @@ jobs:
         node-version: [8.x, 10.x, 12.x]
 
     steps:
+    - name: Get Date
+      id: get-date
+      run: |
+        echo "::set-output name=date::$(/bin/date -u "+%Y%m%d")"
+      shell: bash # For Windows, Linux and macOS default to bash already
+    - name: Cache .git folder
+      uses: actions/cache@v1
+      with:
+        path: ~/.git
+        key: git-${{ steps.get-date.outputs.date }}
+        restore-keys: git-
     - uses: actions/checkout@v1
       with:
         fetch-depth: 5
@@ -26,13 +37,13 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Cache dependencies
-      uses: actions/cache@v1
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+    #- name: Cache dependencies
+    #  uses: actions/cache@v1
+    #  with:
+    #    path: ~/.npm
+    #    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    #    restore-keys: |
+    #      ${{ runner.os }}-node-
     - name: Remove existing TypeScript
       run: |
         npm uninstall typescript --no-save
